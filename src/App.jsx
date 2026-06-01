@@ -1,30 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import LegislationSearch from './components/LegislationSearch';
-import CoreValues from './components/CoreValues';
-import Playground from './components/Playground';
+import StickyCallBar from './components/StickyCallBar';
 import IntakeForm from './components/IntakeForm';
+import PracticeSuite from './components/PracticeSuite';
 import Footer from './components/Footer';
 
 function App() {
   const [theme, setTheme] = useState('light'); // Defaults to Light Mode as requested!
+  const [lang, setLang] = useState('sq'); // Defaults to Albanian!
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
+  // Sync theme changes with the root html class for full tailwind theme support
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
   return (
-    <div className={`relative min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'dark bg-[#0A0A0C] text-[#F3F4F6]' : 'light bg-[#FCFBF9] text-[#111115]'}`}>
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+    <div className={`relative min-h-screen overflow-x-hidden transition-colors duration-500 font-sans ${theme === 'dark' ? 'dark bg-[#0c0c0e] text-[#f3f4f6]' : 'bg-[#fafafa] text-[#111115]'}`}>
+      <Navbar lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
+      
       <main>
-        <Hero theme={theme} />
-        <LegislationSearch theme={theme} />
-        <CoreValues theme={theme} />
-        <Playground theme={theme} />
-        <IntakeForm theme={theme} />
+        <Hero lang={lang} theme={theme} />
+        <IntakeForm lang={lang} theme={theme} />
+        <PracticeSuite lang={lang} theme={theme} />
       </main>
-      <Footer theme={theme} />
+
+      <StickyCallBar lang={lang} />
+      
+      <Footer lang={lang} theme={theme} />
     </div>
   );
 }
